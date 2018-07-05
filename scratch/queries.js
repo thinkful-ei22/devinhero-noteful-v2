@@ -3,7 +3,8 @@
 const knex = require('../knex');
 
 let searchTerm = 'Miracle';
-// Get notes by searchterm
+
+//Get notes by searchterm
 // knex
 //   .select('notes.id', 'title', 'content')
 //   .from('notes')
@@ -20,7 +21,7 @@ let searchTerm = 'Miracle';
 //     console.error(err);
 //   });
 
-//Get notes by ID
+//Get note by ID
 // let noteId = 1003;
 // knex()
 //   .select('notes.id', 'title', 'content')
