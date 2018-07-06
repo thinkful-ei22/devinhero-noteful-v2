@@ -68,7 +68,7 @@ router.get('/:id', (req, res, next) => {
     .then(results =>{
       if (results) {
         const hydrated = hydrateNotes(results);
-        res.json(hydrated);
+        res.json(hydrated[0]);
       } else {
         next();
       }
@@ -145,21 +145,6 @@ router.put('/:id', (req, res, next) => {
       }
     })
     .catch(err => next(err));
-
-  // knex('notes')
-  //   .update(newItem)
-  //   .where('notes.id', id)
-  //   .returning(['notes.id', 'title', 'content', 'folder_id as folderId'])
-  //   .then(([results])=>{
-  //     if(results){
-  //       res.json(results);
-  //     }else{
-  //       next();
-  //     }
-  //   })
-  //   .catch(err =>{
-  //     next(err);
-  //   });
 });
 
 // Post (insert) an item
