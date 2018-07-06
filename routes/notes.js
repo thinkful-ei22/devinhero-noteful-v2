@@ -64,7 +64,7 @@ router.put('/:id', (req, res, next) => {
 
   /***** Never trust users - validate input *****/
   const updateObj = {};
-  const updateableFields = ['title', 'content'];
+  const updateableFields = ['title', 'content', 'folder_id'];
 
   updateableFields.forEach(field => {
     if (field in req.body) {
@@ -78,14 +78,26 @@ router.put('/:id', (req, res, next) => {
     err.status = 400;
     return next(err);
   }
+  let noteId;
 
-  knex()
-    .from('notes')
-    .where({id})
-    .update(updateObj)
-    .returning(['id', 'title', 'content'])
-    .then(results =>{
-      res.json(results[0]);
+  const newItem = {
+    title: req.body.title,
+    content: req.body.content,
+    folder_id: req.body.folderId
+  };
+
+  console.log('id: ', id);
+
+  knex('notes')
+    .update(newItem)
+    .where('notes.id', id)
+    .returning(['notes.id', 'title', 'content', 'folder_id as folderId'])
+    .then(([results])=>{
+      if(results){
+        res.json(results);
+      }else{
+        next();
+      }
     })
     .catch(err =>{
       next(err);
@@ -94,8 +106,8 @@ router.put('/:id', (req, res, next) => {
 
 // Post (insert) an item
 router.post('/', (req, res, next) => {
-  const { title, content, folder_id } = req.body;
-  const newItem = { title, content, folder_id };
+  const { title, content, folderId } = req.body;
+  const newItem = { title, content, folder_id: folderId };
 
   /***** Never trust users - validate input *****/
   if (!newItem.title) {
