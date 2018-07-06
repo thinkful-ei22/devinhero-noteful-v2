@@ -1,6 +1,8 @@
 -- Start from scratch, delete old tables
+DROP TABLE IF EXISTS notes_tags;
 DROP TABLE IF EXISTS notes;
 DROP TABLE IF EXISTS folders;
+DROP TABLE IF EXISTS tags;
 
 
 -- Create folders table
@@ -30,7 +32,7 @@ CREATE TABLE notes (
 
 ALTER SEQUENCE notes_id_seq RESTART 1000;
 
--- Add some test data
+-- Add some test notes
 INSERT INTO notes (title, content, folder_id)
    VALUES  ('LOCAL MAN PRAISES SUN', 'Earlier today, a man lifted his arms gracefully into the air and beheld the sun. Glorious!', 100),
 			('Why Miracles Are Better Than Sorcery', 'Miracle users are known to be more prone to jolly cooperation, as well as being generally better people', 100),
@@ -44,4 +46,29 @@ INSERT INTO notes (title, content, folder_id)
 			('Incoherent Screaming', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAA AAAAA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', NULL),
 			('Unintelligible Whispering', 'wshshssshswhsh shshhhshsh whhshwhwspspsshhp shhh', NULL);
 
+-- Create tags table
+CREATE TABLE tags (
+    id serial PRIMARY KEY,
+    name text NOT NULL UNIQUE
+);
 
+ALTER SEQUENCE tags_id_seq RESTART 100;
+
+-- Add some test tags
+INSERT INTO tags (name)
+  VALUES ('Miraculous'), ('Inspiring'), ('Sad'), ('Aggressive');
+
+-- Create note-tag relation table
+CREATE TABLE notes_tags (
+  note_id INTEGER NOT NULL REFERENCES notes ON DELETE CASCADE,
+  tag_id INTEGER NOT NULL REFERENCES tags ON DELETE CASCADE
+);
+
+-- Apply tags to notes
+INSERT INTO notes_tags (note_id, tag_id)
+  VALUES (1000, 101),
+  (1001, 100),
+  (1002, 100),
+  (1003, 103),
+  (1004, 103),
+  (1004, 101);
