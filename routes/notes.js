@@ -78,7 +78,6 @@ router.put('/:id', (req, res, next) => {
     err.status = 400;
     return next(err);
   }
-  let noteId;
 
   const newItem = {
     title: req.body.title,
